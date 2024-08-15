@@ -1,4 +1,4 @@
-// last update 2024-08-10
+// last update 2024-08-15
 
 /**
  * - triggerMarkEmailAsRead - 未読メールを取得し、その重要性を分析してメールをLINEに通知または既読にする関数
@@ -8,7 +8,7 @@
 
 /**
  * インストーラブルトリガー：
- * 時間主導型/時間ベースのタイマー/4時間おき
+ * 時間主導型/時間ベースのタイマー/1時間おき
  * 
  * 未読メールを取得し、その重要性を分析してLINEへの通知と既読にする関数
  * @return {void}
@@ -24,7 +24,7 @@ function triggerMarkEmailAsRead() {
 
   /**
    * 最後に未読メッセージを確認した日付を取得する関数
-   * プロパティストアに記録が無い場合は1年前の日付を返す
+   * プロパティストアに記録が無い場合は1ヶ月前の日付を返す
    *
    * @return {Date} dateLastUnread - 最後に未読メッセージを確認した日付
    */
@@ -83,7 +83,9 @@ function triggerMarkEmailAsRead() {
     const response = openAIChat.askSimple(systemRole, prompt, model);
 
     // 応答を待機
-    Utilities.sleep(10000);
+    // TPM (tokens per minute)制限に注意
+    // https://platform.openai.com/docs/guides/rate-limits/usage-tiers?context=tier-one
+    Utilities.sleep(5000);
 
     // 応答をJSONとして解析
     const objJson = JSON.parse(response);
